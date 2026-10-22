@@ -99,7 +99,7 @@ CopyVersa no envía nada a ningún servidor, no usa analítica y no carga códig
 
 ## Límites conocidos
 
-- No puede leer el contenido de marcos (`iframe`) de otros dominios. En el userscript, haz clic dentro del marco y pulsa el atajo ahí.
+- Funciona dentro de los marcos (`iframe`) del mismo sitio. Los marcos de otros dominios quedan fuera por seguridad del navegador: en el userscript, haz clic dentro del marco y pulsa el atajo ahí.
 - No copia texto dibujado en lienzos (`canvas`) ni dentro de visores de PDF.
 - El contenido oculto, como pestañas o acordeones cerrados, solo se copia con la opción **Incluir contenido oculto**. Si la página carga ese contenido solo al abrirlo, ábrelo antes de copiar.
 
