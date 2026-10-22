@@ -61,13 +61,17 @@ La extensión solo accede a la pestaña en la que la activas, en el momento en q
 2. Mueve el ratón: un recuadro naranja muestra qué bloque se copiará.
 3. Haz clic para copiar.
 
-| Acción                | Resultado                                                    |
-| --------------------- | ------------------------------------------------------------ |
-| Clic                  | Copia el bloque resaltado                                    |
-| Flecha arriba / abajo | Amplía el recuadro al bloque que lo contiene, o vuelve atrás |
-| Enter                 | Copia el bloque resaltado, o todos los elegidos              |
-| Shift + clic          | Añade o quita un bloque de la selección múltiple             |
-| Esc                   | Sale sin copiar                                              |
+| Acción                     | Resultado                                                         |
+| -------------------------- | ----------------------------------------------------------------- |
+| Clic o Enter               | Copia lo resaltado                                                |
+| Flecha arriba              | Amplía el recuadro al bloque que lo contiene                      |
+| Flecha abajo               | Vuelve atrás, o entra al primer bloque de adentro                 |
+| Flecha izquierda / derecha | Pasa al bloque anterior o siguiente del mismo nivel               |
+| Shift + flecha izq. / der. | Extiende el recuadro a los bloques vecinos, por ejemplo artículos |
+| Shift + clic               | Añade o quita un bloque de la selección múltiple                  |
+| Esc                        | Sale sin copiar                                                   |
+
+**Varios artículos seguidos.** Señala el primero, pulsa Shift + flecha derecha hasta el último y pulsa Enter. CopyVersa copia todo el tramo de corrido, incluido lo que haya entre los bloques, como notas de vigencia.
 
 **Atajo con texto seleccionado.** Si seleccionas texto con el ratón y pulsas el atajo, CopyVersa copia esa selección de inmediato en el formato elegido.
 

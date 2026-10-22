@@ -62,13 +62,15 @@ export function createUi({ t, settings, getState, editableShortcut, handlers }) 
         setMarks([]);
     }
 
-    function highlight(el) {
-        highlighted = el;
-        highlightBox.hidden = !el;
-        if (el) {
-            label.textContent = t.tag(el.localName);
-            place(highlightBox, el);
-        }
+    /** Highlights one element, or a run of siblings as one box. */
+    function highlight(target) {
+        highlighted = target;
+        highlightBox.hidden = !target;
+        if (!target) return;
+        label.textContent = Array.isArray(target)
+            ? t('blocks', { count: target.length })
+            : t.tag(target.localName);
+        place(highlightBox, target);
     }
 
     function setMarks(elements) {
@@ -89,9 +91,10 @@ export function createUi({ t, settings, getState, editableShortcut, handlers }) 
         });
     }
 
-    function place(box, el) {
-        const rect = el.getBoundingClientRect();
-        const [x, y] = frameOffset(el);
+    function place(box, target) {
+        const elements = [target].flat();
+        const rect = unionRect(elements.map((el) => el.getBoundingClientRect()));
+        const [x, y] = frameOffset(elements[0]);
         box.style.transform = `translate(${rect.left + x}px, ${rect.top + y}px)`;
         box.style.width = `${rect.width}px`;
         box.style.height = `${rect.height}px`;
@@ -331,4 +334,12 @@ function svg(viewBox, shapes, className) {
         el.append(shape);
     }
     return el;
+}
+
+function unionRect(rects) {
+    const left = Math.min(...rects.map((rect) => rect.left));
+    const top = Math.min(...rects.map((rect) => rect.top));
+    const right = Math.max(...rects.map((rect) => rect.right));
+    const bottom = Math.max(...rects.map((rect) => rect.bottom));
+    return { left, top, width: right - left, height: bottom - top };
 }

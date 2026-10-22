@@ -161,6 +161,45 @@ test('works inside same-origin frames, as on SUIN-Juriscol', async ({ page, cont
     await expect.poll(() => readClipboard(page)).toBe('Sobre derechos de **autor**.');
 });
 
+test('moves between sibling blocks and copies a run of them in one piece', async ({ page, context }) => {
+    await open(page, context);
+    // Same shape as SUIN-Juriscol: articles as sibling blocks, empty anchors
+    // between them, and loose text that belongs to no block.
+    await page.evaluate(() => {
+        const section = document.createElement('section');
+        section.id = 'ley';
+        section.innerHTML = [1, 2, 3, 4]
+            .map((n) => `<a name="a${n}"></a><div id="art${n}"><p>Artículo ${n}. Texto ${n}.</p></div>`)
+            .join('')
+            .replace('<a name="a4">', 'Nota de vigencia.<a name="a4">');
+        document.body.prepend(section);
+    });
+    await activate(page);
+    const highlight = page.locator('copyversa-ui').locator('.highlight');
+
+    await page.locator('#art1 p').hover();
+    await page.keyboard.press('ArrowUp');
+    await page.keyboard.press('ArrowRight');
+    await expect(highlight).toContainText('Bloque');
+    expect((await highlight.boundingBox()).y).toBeCloseTo((await page.locator('#art2').boundingBox()).y, 0);
+
+    await page.keyboard.press('Shift+ArrowRight');
+    await page.keyboard.press('Shift+ArrowRight');
+    await expect(highlight).toContainText('3 bloques');
+    await page.keyboard.press('Enter');
+    await expect
+        .poll(() => readClipboard(page))
+        .toBe('Artículo 2. Texto 2.\n\nArtículo 3. Texto 3.\n\nNota de vigencia.\n\nArtículo 4. Texto 4.');
+
+    // Shift+Left shrinks the run; ArrowDown enters the block.
+    await page.keyboard.press('Shift+ArrowLeft');
+    await expect(highlight).toContainText('2 bloques');
+    await page.keyboard.press('ArrowLeft');
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('Enter');
+    await expect.poll(() => readClipboard(page)).toBe('Artículo 2. Texto 2.');
+});
+
 test('copies the current text selection directly', async ({ page, context }) => {
     await open(page, context);
     await page.evaluate(() => {
