@@ -36,13 +36,17 @@ With CopyVersa, you point at a block of the page, click, and the content lands o
 
 Press **Ctrl+Shift+X** (**Cmd+Shift+X** on Mac with the extension), move the mouse and click.
 
-| Action          | Result                                            |
-| --------------- | ------------------------------------------------- |
-| Click           | Copy the highlighted block                        |
-| Arrow up / down | Expand to the enclosing block, or go back         |
-| Enter           | Copy the highlighted block, or all selected ones  |
-| Shift + click   | Add or remove a block from the multiple selection |
-| Esc             | Exit without copying                              |
+| Action                   | Result                                                       |
+| ------------------------ | ------------------------------------------------------------ |
+| Click or Enter           | Copy what is highlighted                                     |
+| Arrow up                 | Expand to the enclosing block                                |
+| Arrow down               | Go back, or enter the first block inside                     |
+| Arrow left / right       | Move to the previous or next block on the same level         |
+| Shift + arrow left/right | Extend the highlight to neighboring blocks, such as articles |
+| Shift + click            | Add or remove a block from the multiple selection            |
+| Esc                      | Exit without copying                                         |
+
+A run of blocks picked with Shift + arrows is copied in one piece, including anything between them.
 
 If text is already selected when you press the shortcut, CopyVersa copies that selection right away.
 

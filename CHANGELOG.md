@@ -4,6 +4,14 @@ Este archivo sigue el formato de [Keep a Changelog](https://keepachangelog.com/e
 
 ## [Sin publicar]
 
+## [4.1.0] - 2026-10-22
+
+### Añadido
+
+- Flechas izquierda y derecha para pasar al bloque anterior o siguiente del mismo nivel, saltando enlaces vacíos y elementos ocultos.
+- Shift + flechas izquierda y derecha para extender el recuadro a varios bloques vecinos, como una serie de artículos. El tramo se copia de corrido, con lo que haya entre los bloques.
+- Flecha abajo entra al primer bloque de adentro cuando no hay un paso que deshacer.
+
 ## [4.0.1] - 2026-10-22
 
 ### Corregido
@@ -54,6 +62,7 @@ Este archivo sigue el formato de [Keep a Changelog](https://keepachangelog.com/e
 
 Userscript distribuido fuera de este repositorio. Copiaba elementos como Markdown, Markdown de GitHub o HTML.
 
-[Sin publicar]: https://github.com/oddradiocircle/Copyversa/compare/v4.0.1...HEAD
+[Sin publicar]: https://github.com/oddradiocircle/Copyversa/compare/v4.1.0...HEAD
+[4.1.0]: https://github.com/oddradiocircle/Copyversa/compare/v4.0.1...v4.1.0
 [4.0.1]: https://github.com/oddradiocircle/Copyversa/compare/v4.0.0...v4.0.1
 [4.0.0]: https://github.com/oddradiocircle/Copyversa/releases/tag/v4.0.0
