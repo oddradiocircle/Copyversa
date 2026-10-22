@@ -1,0 +1,7 @@
+{
+    "appName": { "message": "CopyVersa" },
+    "appDescription": {
+        "message": "Copia contenido web como Markdown, texto plano o texto enriquecido, conservando su estructura."
+    },
+    "actionTitle": { "message": "Activar CopyVersa (Ctrl+Shift+X)" }
+}
