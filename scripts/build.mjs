@@ -22,6 +22,7 @@ const metadata = `// ==UserScript==
 // @updateURL      ${latest}/copyversa.meta.js
 // @downloadURL    ${latest}/copyversa.user.js
 // @match          *://*/*
+// @grant          GM_info
 // @grant          GM_getValue
 // @grant          GM_setValue
 // @grant          GM_setClipboard
