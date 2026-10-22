@@ -86,7 +86,7 @@ export function capture(target, { ignore = [], includeHidden = false } = {}) {
 
 function inspect(el, inherited, context, marks) {
     const tag = el.localName;
-    const style = getComputedStyle(el);
+    const style = el.ownerDocument.defaultView.getComputedStyle(el);
     const flags = [];
     let value = null;
 
@@ -166,7 +166,8 @@ function isHidden(el, style, includeHidden) {
         isInClosedDetails(el) ||
         // Visibility is inherited: only the element that sets it decides.
         (/^(hidden|collapse)$/.test(style.visibility) &&
-            (!el.parentElement || getComputedStyle(el.parentElement).visibility === 'visible'));
+            (!el.parentElement ||
+                el.ownerDocument.defaultView.getComputedStyle(el.parentElement).visibility === 'visible'));
     if (collapsed && !(includeHidden && isCollapsible(el))) return true;
     // Text meant only for screen readers: absolutely positioned and clipped.
     return (

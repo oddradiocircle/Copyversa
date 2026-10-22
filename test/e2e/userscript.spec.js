@@ -138,6 +138,29 @@ test('copies closed accordions only when asked, and never hidden menus', async (
     await expect.poll(() => readClipboard(page)).toBe('Visible\n\nHechos\n\nPrimero\n\nPestaña');
 });
 
+test('works inside same-origin frames, as on SUIN-Juriscol', async ({ page, context }) => {
+    await open(page, context);
+    await page.evaluate(() => {
+        const frame = document.createElement('iframe');
+        frame.id = 'documento';
+        frame.style.cssText = 'width: 600px; height: 300px; border: 2px solid; margin: 40px';
+        frame.srcdoc = '<h1>LEY 23 DE 1982</h1><p id="objeto">Sobre derechos de <b>autor</b>.</p>';
+        document.body.prepend(frame);
+    });
+    const frame = page.frameLocator('#documento');
+    await frame.locator('#objeto').waitFor();
+
+    // The focus is inside the frame when the shortcut is pressed.
+    await frame.locator('h1').click();
+    await activate(page);
+    await frame.locator('#objeto').hover();
+    const box = await frame.locator('#objeto').boundingBox();
+    const highlight = await page.locator('copyversa-ui').locator('.highlight').boundingBox();
+    expect(Math.round(highlight.y)).toBe(Math.round(box.y));
+    await page.keyboard.press('Enter');
+    await expect.poll(() => readClipboard(page)).toBe('Sobre derechos de **autor**.');
+});
+
 test('copies the current text selection directly', async ({ page, context }) => {
     await open(page, context);
     await page.evaluate(() => {

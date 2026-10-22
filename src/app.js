@@ -1,5 +1,6 @@
 import { writeClipboard } from './clipboard.js';
 import { copyContent } from './core/index.js';
+import { pageWindows } from './frames.js';
 import { createI18n } from './i18n.js';
 import { DEFAULTS, formatShortcut, loadSettings, matchesShortcut, shortcutFromEvent } from './settings.js';
 import { createUi } from './ui/ui.js';
@@ -28,6 +29,7 @@ export function createApp(platform) {
         selected: [],
     };
     let ui = null;
+    let windows = [];
 
     function getUi() {
         ui ??= createUi({
@@ -64,7 +66,7 @@ export function createApp(platform) {
         if (ranges.length) {
             copy(ranges, 'copiedSelection');
             // Otherwise the next press would copy it again instead of opening the picker.
-            getSelection().removeAllRanges();
+            for (const range of ranges) documentOf(range).getSelection().removeAllRanges();
             return;
         }
         state.active = true;
@@ -87,15 +89,19 @@ export function createApp(platform) {
     }
 
     function listen(on) {
-        const method = (...args) =>
-            on ? window.addEventListener(...args) : window.removeEventListener(...args);
-        const options = { capture: true };
-        method('pointermove', onPointerMove, options);
-        method('click', onClick, options);
-        method('keydown', onKeyDown, options);
-        method('scroll', onViewportChange, { capture: true, passive: true });
-        method('resize', onViewportChange, options);
-        for (const type of PICKER_EVENTS) method(type, block, options);
+        if (on) windows = pageWindows();
+        for (const win of windows) {
+            const method = (...args) =>
+                on ? win.addEventListener(...args) : win.removeEventListener(...args);
+            const options = { capture: true };
+            method('pointermove', onPointerMove, options);
+            method('click', onClick, options);
+            method('keydown', onKeyDown, options);
+            method('scroll', onViewportChange, { capture: true, passive: true });
+            method('resize', onViewportChange, options);
+            for (const type of PICKER_EVENTS) method(type, block, options);
+        }
+        if (!on) windows = [];
     }
 
     function onPointerMove(event) {
@@ -156,7 +162,7 @@ export function createApp(platform) {
 
         if (event.key === 'ArrowUp' && state.hovered) {
             const parent = state.hovered.parentElement ?? state.hovered.getRootNode().host;
-            if (!parent || state.hovered === document.body) return;
+            if (!parent || state.hovered === state.hovered.ownerDocument.body) return;
             state.trail.push(state.hovered);
             hover(parent);
         } else if (event.key === 'ArrowDown' && state.trail.length) {
@@ -198,7 +204,7 @@ export function createApp(platform) {
         try {
             content = copyContent(unique, {
                 ...settings,
-                baseURI: document.baseURI,
+                baseURI: documentOf(unique[0]).baseURI,
                 ignore: ui ? [ui.host] : [],
                 source: settings.includeSource ? source() : null,
             });
@@ -244,11 +250,13 @@ export function createApp(platform) {
     }
 
     function selectedRanges() {
-        const selection = getSelection();
-        if (!selection || selection.isCollapsed || !selection.toString().trim()) return [];
-        return Array.from({ length: selection.rangeCount }, (_, index) => selection.getRangeAt(index)).filter(
-            (range) => !ui?.contains(range.commonAncestorContainer),
-        );
+        return pageWindows()
+            .map((win) => win.getSelection())
+            .filter((selection) => selection && !selection.isCollapsed && selection.toString().trim())
+            .flatMap((selection) =>
+                Array.from({ length: selection.rangeCount }, (_, index) => selection.getRangeAt(index)),
+            )
+            .filter((range) => !ui?.contains(range.commonAncestorContainer));
     }
 
     /** Keyboard handler for platforms where CopyVersa owns its shortcut. */
@@ -286,4 +294,8 @@ export function createApp(platform) {
 function deepTarget(event) {
     const [first] = event.composedPath();
     return first?.nodeType === 1 ? first : event.target;
+}
+
+function documentOf(target) {
+    return target.ownerDocument ?? target.startContainer.ownerDocument;
 }
