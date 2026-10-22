@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="assets/icon.svg" width="88" height="88" alt="">
-</p>
-
 <h1 align="center">CopyVersa</h1>
 
 <p align="center">

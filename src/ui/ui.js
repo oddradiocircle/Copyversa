@@ -176,7 +176,6 @@ export function createUi({ t, settings, getState, editableShortcut, handlers }) 
         const bar = h(
             'div',
             { className: 'bar' },
-            logo(),
             h('strong', {}, t('panel')),
             optionsToggle,
             iconButton(t('close'), ICONS.close, () => handlers.onClose()),
@@ -310,33 +309,6 @@ function iconButton(text, paths, onClick) {
         ),
     );
     return button;
-}
-
-function logo() {
-    return svg(
-        '0 0 128 128',
-        [
-            ['rect', { width: 128, height: 128, rx: 28, fill: '#1a1a1a' }],
-            [
-                'rect',
-                {
-                    x: 26,
-                    y: 22,
-                    width: 52,
-                    height: 64,
-                    rx: 9,
-                    fill: 'none',
-                    stroke: '#f0ebe5',
-                    'stroke-width': 8,
-                },
-            ],
-            ['rect', { x: 46, y: 42, width: 56, height: 66, rx: 9, fill: '#f97316' }],
-            ['rect', { x: 58, y: 58, width: 32, height: 7, rx: 3.5, fill: '#1a1a1a' }],
-            ['rect', { x: 58, y: 72, width: 32, height: 7, rx: 3.5, fill: '#1a1a1a' }],
-            ['rect', { x: 58, y: 86, width: 20, height: 7, rx: 3.5, fill: '#1a1a1a' }],
-        ],
-        'logo',
-    );
 }
 
 function svg(viewBox, shapes, className) {
