@@ -4,7 +4,7 @@ Este archivo sigue el formato de [Keep a Changelog](https://keepachangelog.com/e
 
 ## [Sin publicar]
 
-## [4.0.0] - 2026-10-21
+## [4.0.0] - 2026-10-22
 
 ### Añadido
 
@@ -17,6 +17,7 @@ Este archivo sigue el formato de [Keep a Changelog](https://keepachangelog.com/e
 - Marcadores de listas con letras y números romanos.
 - Opción para añadir la fuente y la fecha de consulta.
 - Opción para descartar imágenes.
+- Opción para incluir el contenido oculto, como acordeones y pestañas cerradas.
 - Flechas arriba y abajo para ampliar o reducir el bloque resaltado, y Enter para copiar.
 - Shift + clic para la selección múltiple, con números que muestran el orden.
 - Copia inmediata del texto seleccionado al pulsar el atajo.
@@ -29,6 +30,8 @@ Este archivo sigue el formato de [Keep a Changelog](https://keepachangelog.com/e
 - La interfaz queda aislada de la página: no la afectan los estilos del sitio ni cambia la página.
 - El atajo se graba pulsando la nueva combinación.
 - **Markdown** usa siempre la variante de GitHub.
+- En Markdown, la primera fila de una tabla solo es encabezado si la página la marca así. Las tablas de clave y valor quedan con el encabezado vacío.
+- Sin icono: el panel muestra solo el nombre.
 - El nuevo identificador del userscript permite actualizaciones automáticas desde GitHub. Si tenías la versión 3.0, desinstálala antes de instalar esta.
 
 ### Corregido

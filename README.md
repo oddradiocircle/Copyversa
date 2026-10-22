@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="assets/icon.svg" width="88" height="88" alt="">
-</p>
-
 <h1 align="center">CopyVersa</h1>
 
 <p align="center">
@@ -90,6 +86,7 @@ En el panel, el botón de opciones muestra:
 
 - **Quitar enlaces:** deja solo el texto de los enlaces.
 - **Incluir imágenes:** conserva o descarta las imágenes.
+- **Incluir contenido oculto:** copia también los acordeones y las pestañas cerradas del bloque. Viene apagada para no copiar menús ocultos.
 - **Añadir fuente y fecha de consulta:** agrega, por ejemplo, `Fuente: Ley 1564 de 2012. https://… Consultado el 21 de octubre de 2026.`
 - **Salir después de copiar:** cierra CopyVersa después de cada copia.
 - **Atajo:** en el userscript puedes cambiarlo. En la extensión se cambia en `chrome://extensions/shortcuts`.
@@ -104,7 +101,7 @@ CopyVersa no envía nada a ningún servidor, no usa analítica y no carga códig
 
 - No puede leer el contenido de marcos (`iframe`) de otros dominios. En el userscript, haz clic dentro del marco y pulsa el atajo ahí.
 - No copia texto dibujado en lienzos (`canvas`) ni dentro de visores de PDF.
-- El contenido oculto, como pestañas o acordeones cerrados, no se copia. Ábrelos antes de copiar.
+- El contenido oculto, como pestañas o acordeones cerrados, solo se copia con la opción **Incluir contenido oculto**. Si la página carga ese contenido solo al abrirlo, ábrelo antes de copiar.
 
 ## Desarrollo
 

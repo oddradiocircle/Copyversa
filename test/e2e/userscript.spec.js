@@ -7,6 +7,7 @@ const GM_SHIM = `
     const store = new Map();
     window.GM_getValue = (key, fallback) => (store.has(key) ? store.get(key) : fallback);
     window.GM_setValue = (key, value) => store.set(key, value);
+    window.GM_info = { scriptHandler: 'Tampermonkey' };
     window.GM_registerMenuCommand = () => {};
     window.GM_setClipboard = (data) => navigator.clipboard.writeText(data);
 `;
@@ -122,6 +123,9 @@ test('copies the current text selection directly', async ({ page, context }) => 
     await expect(toast(page)).toHaveText('Selección copiada como Markdown');
     expect(await readClipboard(page)).toBe('Notifíquese');
     await expect(panel(page)).toBeHidden();
+    // The selection is used once; the next press opens the picker.
+    await page.keyboard.press('Control+Shift+X');
+    await expect(panel(page)).toBeVisible();
 });
 
 test('keeps the arrow keys working after using the panel', async ({ page, context }) => {

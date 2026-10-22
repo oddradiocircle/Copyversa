@@ -10,13 +10,7 @@
         "service_worker": "background.js"
     },
     "action": {
-        "default_title": "__MSG_actionTitle__",
-        "default_icon": {
-            "16": "icons/icon-16.png",
-            "32": "icons/icon-32.png",
-            "48": "icons/icon-48.png",
-            "128": "icons/icon-128.png"
-        }
+        "default_title": "__MSG_actionTitle__"
     },
     "commands": {
         "_execute_action": {
@@ -25,11 +19,5 @@
                 "mac": "Command+Shift+X"
             }
         }
-    },
-    "icons": {
-        "16": "icons/icon-16.png",
-        "32": "icons/icon-32.png",
-        "48": "icons/icon-48.png",
-        "128": "icons/icon-128.png"
     }
 }

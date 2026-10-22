@@ -17,12 +17,12 @@ const metadata = `// ==UserScript==
 // @description:en Copy web content as Markdown, plain text or rich text, keeping its structure.
 // @author         ${pkg.author}
 // @license        ${pkg.license}
-// @icon           https://raw.githubusercontent.com/oddradiocircle/Copyversa/main/assets/icon.svg
 // @homepageURL    ${repo}
 // @supportURL     ${repo}/issues
 // @updateURL      ${latest}/copyversa.meta.js
 // @downloadURL    ${latest}/copyversa.user.js
 // @match          *://*/*
+// @grant          GM_info
 // @grant          GM_getValue
 // @grant          GM_setValue
 // @grant          GM_setClipboard
@@ -94,7 +94,6 @@ const manifest = JSON.parse(await readFile('src/extension/manifest.json', 'utf8'
 manifest.version = pkg.version;
 await writeFile('dist/extension/manifest.json', `${JSON.stringify(manifest, null, 4)}\n`);
 await cp('src/extension/_locales', 'dist/extension/_locales', { recursive: true });
-await cp('assets/icons', 'dist/extension/icons', { recursive: true });
 await cp('LICENSE', 'dist/extension/LICENSE');
 
 if (watch) {

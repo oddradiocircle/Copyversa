@@ -63,6 +63,8 @@ export function createApp(platform) {
         const ranges = selectedRanges();
         if (ranges.length) {
             copy(ranges, 'copiedSelection');
+            // Otherwise the next press would copy it again instead of opening the picker.
+            getSelection().removeAllRanges();
             return;
         }
         state.active = true;
@@ -118,6 +120,10 @@ export function createApp(platform) {
     // While picking, the page must not react to clicks: no links, no menus.
     function block(event) {
         if (ui.owns(event)) return;
+        if (state.recording && event.type !== 'keydown') {
+            state.recording = false;
+            ui.update();
+        }
         event.preventDefault();
         event.stopImmediatePropagation();
     }

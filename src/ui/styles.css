@@ -135,12 +135,6 @@
     font-size: 14px;
 }
 
-.logo {
-    width: 20px;
-    height: 20px;
-    flex: none;
-}
-
 button {
     font: inherit;
     color: inherit;
