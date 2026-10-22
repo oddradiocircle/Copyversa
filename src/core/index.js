@@ -13,6 +13,7 @@ export const FORMATS = ['markdown', 'text', 'rich', 'html'];
  * @param {string} options.baseURI Base for relative links and images.
  * @param {boolean} [options.removeLinks]
  * @param {boolean} [options.includeImages]
+ * @param {boolean} [options.includeHidden] Also copy closed accordions, tabs and other hidden content.
  * @param {Element[]} [options.ignore] Elements never copied (CopyVersa's own UI).
  * @param {{title: string, url: string, label: string, accessed: string}} [options.source]
  * @returns {{text: string, html?: string}} Empty text when there is nothing to copy.

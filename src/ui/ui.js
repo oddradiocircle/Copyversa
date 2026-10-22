@@ -3,7 +3,7 @@ import { FORMATS } from '../core/index.js';
 import { formatShortcut } from '../settings.js';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
-const OPTIONS = ['removeLinks', 'includeImages', 'includeSource', 'exitAfterCopy'];
+const OPTIONS = ['removeLinks', 'includeImages', 'includeHidden', 'includeSource', 'exitAfterCopy'];
 
 /**
  * Builds CopyVersa's interface inside a shadow root, so page styles cannot

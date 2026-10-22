@@ -49,11 +49,16 @@ const NEEDS_PARENT = new Set(['caption', 'dd', 'dt', 'li', 'tbody', 'td', 'tfoot
  * values, so they are recorded on the page first as temporary attributes
  * that travel with the clone, and removed again right after cloning.
  */
-export function capture(target, { ignore = [] } = {}) {
+export function capture(target, { ignore = [], includeHidden = false } = {}) {
     const isRange = typeof target.cloneContents === 'function';
     const root = isRange ? toElement(target.commonAncestorContainer) : target;
     const marks = [];
-    inspect(root, { bold: false, italic: false, align: null }, new Set(ignore), marks);
+    inspect(
+        root,
+        { bold: false, italic: false, align: null },
+        { ignore: new Set(ignore), includeHidden },
+        marks,
+    );
 
     for (const { el, flags, value } of marks) {
         el.setAttribute(FLAGS_ATTR, flags.join(' '));
@@ -79,13 +84,13 @@ export function capture(target, { ignore = [] } = {}) {
     }
 }
 
-function inspect(el, inherited, ignore, marks) {
+function inspect(el, inherited, context, marks) {
     const tag = el.localName;
     const style = getComputedStyle(el);
     const flags = [];
     let value = null;
 
-    if (ignore.has(el) || isHidden(el, style)) {
+    if (context.ignore.has(el) || isHidden(el, style, context.includeHidden)) {
         flags.push('hidden');
     } else if (tag === 'input') {
         if (CHECKABLE_INPUTS.has(el.type)) value = el.checked ? '☑' : '☐';
@@ -147,18 +152,29 @@ function inspect(el, inherited, ignore, marks) {
     }
 
     if (flags.length) marks.push({ el, flags, value });
-    for (const child of el.children) inspect(child, own, ignore, marks);
+    for (const child of el.children) inspect(child, own, context, marks);
 }
 
-function isHidden(el, style) {
-    if (el.hidden || style.display === 'none') return true;
-    if (style.visibility === 'hidden' || style.visibility === 'collapse') return true;
+// Collapsed content (closed accordions, inactive tabs, display: none) is
+// copied only when the user asks for it. Screen-reader text never is.
+function isHidden(el, style, includeHidden) {
+    if (!includeHidden) {
+        if (el.hidden || style.display === 'none' || style.contentVisibility === 'hidden') return true;
+        if (style.visibility === 'hidden' || style.visibility === 'collapse') return true;
+        if (isInClosedDetails(el)) return true;
+    }
     // Text meant only for screen readers: absolutely positioned and clipped.
     return (
         style.position === 'absolute' &&
         style.overflow === 'hidden' &&
         (Number.parseFloat(style.width) <= 1 || Number.parseFloat(style.height) <= 1)
     );
+}
+
+function isInClosedDetails(el) {
+    const parent = el.parentElement;
+    if (parent?.localName !== 'details' || parent.open) return false;
+    return el !== parent.querySelector(':scope > summary');
 }
 
 function fontWeight(style) {

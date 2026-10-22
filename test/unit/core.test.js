@@ -103,6 +103,16 @@ describe('cleaning', () => {
         expect(copy(el).text).toBe('Visible');
     });
 
+    it('leaves closed accordions out unless hidden content is included', () => {
+        const el = render(`<div>
+            <details><summary>Hechos</summary><p>Primero</p></details>
+            <p style="display: none">Pestaña</p>
+            <span style="position: absolute; width: 1px; height: 1px; overflow: hidden">lector</span>
+        </div>`);
+        expect(copy(el).text).toBe('Hechos');
+        expect(copy(el, { includeHidden: true }).text).toBe('Hechos\n\nPrimero\n\nPestaña');
+    });
+
     it('removes content hidden by a stylesheet', () => {
         document.head.innerHTML = '<style>.menu { display: none }</style>';
         const el = render('<div><nav class="menu">Menú</nav><p>Texto</p></div>');
@@ -190,9 +200,21 @@ describe('tables', () => {
         );
     });
 
-    it('uses the first row as header when there is none', () => {
-        const el = render('<table><tr><td>A</td><td>B</td></tr><tr><td>1</td><td>2</td></tr></table>');
+    it('uses a bold first row as header', () => {
+        const el = render(
+            '<table><tr><td><b>A</b></td><td><b>B</b></td></tr><tr><td>1</td><td>2</td></tr></table>',
+        );
         expect(copy(el).text).toBe('| A | B |\n| --- | --- |\n| 1 | 2 |');
+    });
+
+    it('leaves the header empty in key-value tables', () => {
+        const el = render(`<table>
+            <tr><th>Radicado</th><td>2026-001</td></tr>
+            <tr><th>Despacho</th><td>Juzgado 1</td></tr>
+        </table>`);
+        expect(copy(el).text).toBe(
+            '|  |  |\n| --- | --- |\n| Radicado | 2026-001 |\n| Despacho | Juzgado 1 |',
+        );
     });
 
     it('expands colspan and rowspan', () => {
@@ -213,7 +235,7 @@ describe('tables', () => {
 
     it('joins paragraphs inside a cell with <br>', () => {
         const el = render('<table><tr><td>A</td><td><p>Uno</p><p>Dos</p></td></tr></table>');
-        expect(copy(el).text).toBe('| A | Uno<br>Dos |\n| --- | --- |');
+        expect(copy(el).text).toBe('|  |  |\n| --- | --- |\n| A | Uno<br>Dos |');
     });
 
     it('reads layout tables as blocks', () => {
@@ -224,7 +246,7 @@ describe('tables', () => {
     it('copies a single row as a table', () => {
         render('<table><tr><td>A</td><td>B</td></tr><tr><td>1</td><td>2</td></tr></table>');
         const row = document.querySelectorAll('tr')[1];
-        expect(copy(row).text).toBe('| 1 | 2 |\n| --- | --- |');
+        expect(copy(row).text).toBe('|  |  |\n| --- | --- |\n| 1 | 2 |');
     });
 
     it('separates cells with tabs in plain text', () => {
@@ -302,7 +324,7 @@ describe('selections', () => {
         const range = document.createRange();
         range.setStartBefore(rows[0]);
         range.setEndAfter(rows[1]);
-        expect(copy(range).text).toBe('| A | B |\n| --- | --- |\n| 1 | 2 |');
+        expect(copy(range).text).toBe('|  |  |\n| --- | --- |\n| A | B |\n| 1 | 2 |');
     });
 });
 

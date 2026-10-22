@@ -4,6 +4,7 @@ export const DEFAULTS = {
     format: 'markdown',
     removeLinks: false,
     includeImages: true,
+    includeHidden: false,
     includeSource: false,
     exitAfterCopy: false,
     shortcut: { ctrlKey: true, shiftKey: true, altKey: false, metaKey: false, key: 'X' },

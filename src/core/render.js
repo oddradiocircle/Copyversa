@@ -72,10 +72,14 @@ function createMarkdownService() {
         replacement: (content, table) => {
             const cell = (node) =>
                 service.turndown(node).trim().replace(/\|/g, '\\|').replace(/\n+/g, '<br>');
-            const [head, ...body] = grid(table, cell);
+            const rows = grid(table, cell);
+            // Header cells are bold already; a bold first row keeps no ** marks.
+            const [head, ...body] = isHeaderRow(table.rows[0])
+                ? [rows[0].map((text) => text.replace(/^\*\*(.*)\*\*$/, '$1')), ...rows.slice(1)]
+                : [rows[0].map(() => ''), ...rows];
             const line = (cells) => `| ${cells.join(' | ')} |`;
-            const rows = [line(head), line(head.map(() => '---')), ...body.map(line)];
-            return block(caption(table, cell) + rows.join('\n'));
+            const lines = [line(head), line(head.map(() => '---')), ...body.map(line)];
+            return block(caption(table, cell) + lines.join('\n'));
         },
     });
     return service;
@@ -218,6 +222,20 @@ function grid(table, convert) {
     });
     const columns = Math.max(...rows.map((cells) => cells.length));
     return rows.map((cells) => [...cells, ...Array(columns - cells.length).fill('')]);
+}
+
+// Markdown tables need a header row. A first row is one only when the page
+// says so; otherwise, as in key-value tables, the header stays empty.
+function isHeaderRow(row) {
+    if (!row) return false;
+    if (row.parentElement?.localName === 'thead') return true;
+    const cells = Array.from(row.cells).filter((cell) => cell.textContent.trim());
+    return cells.length > 0 && cells.every((cell) => cell.localName === 'th' || isBold(cell));
+}
+
+function isBold(cell) {
+    const strong = cell.querySelector('strong, b');
+    return strong?.textContent.trim() === cell.textContent.trim();
 }
 
 function span(cell, name) {
