@@ -136,6 +136,34 @@ test('keeps the arrow keys working after using the panel', async ({ page, contex
         .toBe('a. Admitir la demanda.\n\nb. Notificar a la parte demandada.');
 });
 
+test('never copies its own interface', async ({ page, context }) => {
+    await open(page, context);
+    await activate(page);
+    await panel(page).getByRole('button', { name: 'Opciones' }).click();
+    await page.locator('#cierre').click();
+    await expect(toast(page)).toBeVisible();
+
+    await page.locator('#titulo').hover();
+    for (let i = 0; i < 3; i++) await page.keyboard.press('ArrowUp');
+    await page.keyboard.press('Enter');
+    await expect.poll(() => readClipboard(page)).toContain('Notifíquese y cúmplase.');
+    const wholePage = await readClipboard(page);
+    expect(wholePage).toContain('# Sentencia de primera instancia');
+    for (const text of ['CopyVersa', 'Selección múltiple', 'Copiado como', 'Atajo']) {
+        expect(wholePage).not.toContain(text);
+    }
+
+    await page.keyboard.press('Escape');
+    await page.keyboard.press('Control+A');
+    await page.keyboard.press('Control+Shift+X');
+    await expect(toast(page)).toHaveText('Selección copiada como Markdown');
+    const selection = await readClipboard(page);
+    expect(selection).toContain('Sentencia de primera instancia');
+    for (const text of ['CopyVersa', 'Selección múltiple', 'Copiado como', 'Atajo']) {
+        expect(selection).not.toContain(text);
+    }
+});
+
 test('exits with Escape and lets the page work again', async ({ page, context }) => {
     await open(page, context);
     await activate(page);
