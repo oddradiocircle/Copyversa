@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Expediente 11001-31-03-001-2026-00123-00</title>
+        <style>
+            body {
+                margin: 0;
+                font:
+                    16px/1.6 Georgia,
+                    serif;
+                color: #222;
+                background: #fafaf7;
+            }
+            header {
+                padding: 12px 32px;
+                background: #23395b;
+                color: #fff;
+                font-family: system-ui, sans-serif;
+            }
+            main {
+                max-width: 640px;
+                margin: 0 auto;
+                padding: 24px 32px 64px;
+            }
+            .menu {
+                display: none;
+            }
+            .label {
+                display: inline-block;
+                min-width: 120px;
+                font-weight: 700;
+            }
+            .resaltado {
+                font-weight: 700;
+            }
+            .literales {
+                list-style-type: lower-alpha;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                font-family: system-ui, sans-serif;
+                font-size: 14px;
+            }
+            th,
+            td {
+                padding: 6px 8px;
+                border: 1px solid #ccc;
+                text-align: left;
+            }
+            .sr-only {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                overflow: hidden;
+                clip: rect(0 0 0 0);
+            }
+            input {
+                font: inherit;
+                width: 24em;
+                border: 0;
+                background: transparent;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            Rama Judicial (ejemplo ficticio)
+            <nav class="menu"><a href="/inicio">Inicio</a> <a href="/consultas">Consultas</a></nav>
+        </header>
+        <main>
+            <h1 id="titulo">Sentencia de primera instancia</h1>
+            <section id="datos">
+                <div><span class="label">Radicado</span><input id="radicado" readonly /></div>
+                <div><span class="label">Despacho</span><span>Juzgado Primero Civil del Circuito</span></div>
+            </section>
+            <p id="intro">
+                El despacho <span class="resaltado">resuelve</span> la demanda presentada el
+                <time datetime="2026-02-03">3 de febrero de 2026</time>. Ver
+                <a href="/normas/ley-1564-2012">Código General del Proceso</a
+                ><span class="sr-only"> (abre en otra pestaña)</span>.
+            </p>
+            <ol class="literales" id="literales">
+                <li>Admitir la demanda.</li>
+                <li>Notificar a la parte demandada.</li>
+            </ol>
+            <table id="actuaciones">
+                <caption>
+                    Actuaciones
+                </caption>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Actuación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2026-02-03</td>
+                        <td>Radicación de la demanda</td>
+                    </tr>
+                    <tr>
+                        <td>2026-02-10</td>
+                        <td>Auto admisorio</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p id="cierre">Notifíquese y cúmplase.</p>
+        </main>
+        <script>
+            document.getElementById('radicado').value = '11001-31-03-001-2026-00123-00';
+            document.addEventListener('click', () => {
+                window.pageClicks = (window.pageClicks || 0) + 1;
+            });
+        </script>
+    </body>
+</html>
