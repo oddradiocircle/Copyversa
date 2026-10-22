@@ -86,7 +86,7 @@ export function capture(target, { ignore = [], includeHidden = false } = {}) {
 
 function inspect(el, inherited, context, marks) {
     const tag = el.localName;
-    const style = getComputedStyle(el);
+    const style = el.ownerDocument.defaultView.getComputedStyle(el);
     const flags = [];
     let value = null;
 
@@ -155,14 +155,20 @@ function inspect(el, inherited, context, marks) {
     for (const child of el.children) inspect(child, own, context, marks);
 }
 
-// Collapsed content (closed accordions, inactive tabs, display: none) is
-// copied only when the user asks for it. Screen-reader text never is.
+// Closed accordions and inactive tabs are copied only when the user asks for
+// them, and only when the page marks them as collapsible. Other hidden
+// content (menus, duplicates, stale notices) and screen-reader text never is.
 function isHidden(el, style, includeHidden) {
-    if (!includeHidden) {
-        if (el.hidden || style.display === 'none' || style.contentVisibility === 'hidden') return true;
-        if (style.visibility === 'hidden' || style.visibility === 'collapse') return true;
-        if (isInClosedDetails(el)) return true;
-    }
+    const collapsed =
+        el.hidden ||
+        style.display === 'none' ||
+        style.contentVisibility === 'hidden' ||
+        isInClosedDetails(el) ||
+        // Visibility is inherited: only the element that sets it decides.
+        (/^(hidden|collapse)$/.test(style.visibility) &&
+            (!el.parentElement ||
+                el.ownerDocument.defaultView.getComputedStyle(el.parentElement).visibility === 'visible'));
+    if (collapsed && !(includeHidden && isCollapsible(el))) return true;
     // Text meant only for screen readers: absolutely positioned and clipped.
     return (
         style.position === 'absolute' &&
@@ -175,6 +181,16 @@ function isInClosedDetails(el) {
     const parent = el.parentElement;
     if (parent?.localName !== 'details' || parent.open) return false;
     return el !== parent.querySelector(':scope > summary');
+}
+
+// An accordion panel, a tab panel, or a section a button expands.
+function isCollapsible(el) {
+    if (isInClosedDetails(el) || el.getAttribute('hidden') === 'until-found') return true;
+    if (el.getAttribute('role') === 'tabpanel') return true;
+    if (!el.id) return false;
+    return Array.from(el.getRootNode().querySelectorAll('[aria-controls]')).some((control) =>
+        control.getAttribute('aria-controls').split(/\s+/).includes(el.id),
+    );
 }
 
 function fontWeight(style) {

@@ -103,14 +103,21 @@ describe('cleaning', () => {
         expect(copy(el).text).toBe('Visible');
     });
 
-    it('leaves closed accordions out unless hidden content is included', () => {
+    it('copies closed accordions and tabs only when hidden content is included', () => {
         const el = render(`<div>
             <details><summary>Hechos</summary><p>Primero</p></details>
-            <p style="display: none">Pestaña</p>
+            <button aria-expanded="false" aria-controls="pruebas">Pruebas</button>
+            <section id="pruebas" style="display: none"><p>Testimonio</p><p hidden>Borrador</p></section>
+            <div role="tabpanel" style="visibility: hidden"><p>Pestaña</p></div>
+            <div hidden="until-found">Anexo</div>
+            <nav style="display: none">Menú móvil</nav>
+            <p hidden>Aviso viejo</p>
             <span style="position: absolute; width: 1px; height: 1px; overflow: hidden">lector</span>
         </div>`);
         expect(copy(el).text).toBe('Hechos');
-        expect(copy(el, { includeHidden: true }).text).toBe('Hechos\n\nPrimero\n\nPestaña');
+        expect(copy(el, { includeHidden: true }).text).toBe(
+            'Hechos\n\nPrimero\n\nTestimonio\n\nPestaña\n\nAnexo',
+        );
     });
 
     it('removes content hidden by a stylesheet', () => {

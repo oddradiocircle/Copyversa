@@ -1,5 +1,6 @@
 import css from './styles.css';
 import { FORMATS } from '../core/index.js';
+import { frameOffset } from '../frames.js';
 import { formatShortcut } from '../settings.js';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -90,10 +91,11 @@ export function createUi({ t, settings, getState, editableShortcut, handlers }) 
 
     function place(box, el) {
         const rect = el.getBoundingClientRect();
-        box.style.transform = `translate(${rect.left}px, ${rect.top}px)`;
+        const [x, y] = frameOffset(el);
+        box.style.transform = `translate(${rect.left + x}px, ${rect.top + y}px)`;
         box.style.width = `${rect.width}px`;
         box.style.height = `${rect.height}px`;
-        box.classList.toggle('inside', rect.top < 24);
+        box.classList.toggle('inside', rect.top + y < 24);
     }
 
     function toast(message) {

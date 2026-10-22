@@ -4,6 +4,13 @@ Este archivo sigue el formato de [Keep a Changelog](https://keepachangelog.com/e
 
 ## [Sin publicar]
 
+## [4.0.1] - 2026-10-22
+
+### Corregido
+
+- CopyVersa funciona en páginas que muestran el documento dentro de un marco (`iframe`) del mismo sitio, como SUIN-Juriscol. Resalta y copia el contenido del marco, y el atajo responde aunque hayas hecho clic dentro del documento.
+- **Incluir contenido oculto** ya no copia cualquier texto escondido. Solo incluye acordeones (`<details>` o secciones que abre un botón), pestañas y secciones que el navegador despliega al buscar. Los menús, duplicados y avisos ocultos quedan fuera, aunque la opción esté encendida.
+
 ## [4.0.0] - 2026-10-22
 
 ### Añadido
@@ -47,5 +54,6 @@ Este archivo sigue el formato de [Keep a Changelog](https://keepachangelog.com/e
 
 Userscript distribuido fuera de este repositorio. Copiaba elementos como Markdown, Markdown de GitHub o HTML.
 
-[Sin publicar]: https://github.com/oddradiocircle/Copyversa/compare/v4.0.0...HEAD
+[Sin publicar]: https://github.com/oddradiocircle/Copyversa/compare/v4.0.1...HEAD
+[4.0.1]: https://github.com/oddradiocircle/Copyversa/compare/v4.0.0...v4.0.1
 [4.0.0]: https://github.com/oddradiocircle/Copyversa/releases/tag/v4.0.0

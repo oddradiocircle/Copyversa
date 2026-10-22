@@ -1,6 +1,6 @@
 {
     "name": "copyversa",
-    "version": "4.0.0",
+    "version": "4.0.1",
     "private": true,
     "description": "Copia contenido web como Markdown, texto plano o texto enriquecido, conservando su estructura.",
     "license": "MIT",
