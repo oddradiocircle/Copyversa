@@ -25,6 +25,8 @@ export function createApp(platform) {
         recording: false,
         pointerTarget: null,
         hovered: null,
+        // Siblings picked with Shift + arrows, copied as one continuous range.
+        run: null,
         trail: [],
         selected: [],
     };
@@ -82,6 +84,7 @@ export function createApp(platform) {
             recording: false,
             pointerTarget: null,
             hovered: null,
+            run: null,
             trail: [],
             selected: [],
         });
@@ -120,7 +123,65 @@ export function createApp(platform) {
 
     function hover(el) {
         state.hovered = el;
+        state.run = null;
         ui.highlight(el);
+    }
+
+    function extend(direction) {
+        const run = state.run ?? { anchor: state.hovered, focus: state.hovered };
+        const next = sibling(run.focus, direction);
+        if (!next) return;
+        run.focus = next;
+        state.run = run.anchor === run.focus ? null : run;
+        ui.highlight(state.run ? runElements(state.run) : state.hovered);
+        next.scrollIntoView({ block: 'nearest' });
+    }
+
+    function sibling(el, direction) {
+        const step = direction > 0 ? 'nextElementSibling' : 'previousElementSibling';
+        for (let next = el[step]; next; next = next[step]) {
+            if (isContent(next)) return next;
+        }
+        return null;
+    }
+
+    function firstChild(el) {
+        return Array.from(el.children).find(isContent) ?? null;
+    }
+
+    // Skips empty anchors, hidden elements and CopyVersa itself.
+    function isContent(el) {
+        if (ui.contains(el)) return false;
+        const rect = el.getBoundingClientRect();
+        if (!rect.width || !rect.height) return false;
+        return Boolean(el.textContent.trim() || el.querySelector('img, table, input, select, textarea'));
+    }
+
+    function runElements({ anchor, focus }) {
+        const forward = anchor.compareDocumentPosition(focus) & Node.DOCUMENT_POSITION_FOLLOWING;
+        const [first, last] = forward ? [anchor, focus] : [focus, anchor];
+        const elements = [first];
+        for (let el = first; el !== last;) {
+            el = sibling(el, 1);
+            elements.push(el);
+        }
+        return elements;
+    }
+
+    // From the start of the first sibling to the end of the last one, so
+    // that nothing between them is lost.
+    function runRange(run) {
+        const elements = runElements(run);
+        const range = elements[0].ownerDocument.createRange();
+        range.setStartBefore(elements[0]);
+        range.setEndAfter(elements.at(-1));
+        return range;
+    }
+
+    function current() {
+        if (state.selected.length) return state.selected;
+        if (state.run) return [runRange(state.run)];
+        return state.hovered ? [state.hovered] : [];
     }
 
     // While picking, the page must not react to clicks: no links, no menus.
@@ -140,6 +201,7 @@ export function createApp(platform) {
         const target = state.hovered ?? deepTarget(event);
         if (!target) return;
         if (event.shiftKey || state.multiSelect) toggleSelected(target);
+        else if (state.run) copy([runRange(state.run)]);
         else copy([target]);
     }
 
@@ -160,15 +222,27 @@ export function createApp(platform) {
             return;
         }
 
-        if (event.key === 'ArrowUp' && state.hovered) {
+        const horizontal = event.key === 'ArrowLeft' || event.key === 'ArrowRight';
+        const direction = event.key === 'ArrowRight' ? 1 : -1;
+        if (horizontal && state.hovered && event.shiftKey) {
+            extend(direction);
+        } else if (horizontal && state.hovered) {
+            const next = sibling(state.run?.focus ?? state.hovered, direction);
+            if (next) {
+                state.trail = [];
+                hover(next);
+                next.scrollIntoView({ block: 'nearest' });
+            }
+        } else if (event.key === 'ArrowUp' && state.hovered) {
             const parent = state.hovered.parentElement ?? state.hovered.getRootNode().host;
             if (!parent || state.hovered === state.hovered.ownerDocument.body) return;
             state.trail.push(state.hovered);
             hover(parent);
-        } else if (event.key === 'ArrowDown' && state.trail.length) {
-            hover(state.trail.pop());
-        } else if (event.key === 'Enter' && (state.selected.length || state.hovered)) {
-            copy(state.selected.length ? state.selected : [state.hovered]);
+        } else if (event.key === 'ArrowDown' && state.hovered) {
+            const child = state.trail.pop() ?? firstChild(state.hovered);
+            if (child) hover(child);
+        } else if (event.key === 'Enter' && current().length) {
+            copy(current());
         } else {
             return;
         }
