@@ -110,6 +110,34 @@ test('adds the source and remembers options', async ({ page, context }) => {
     );
 });
 
+test('copies closed accordions only when asked, and never hidden menus', async ({ page, context }) => {
+    await open(page, context);
+    await page.evaluate(() => {
+        const section = document.createElement('section');
+        section.id = 'plegables';
+        section.innerHTML = `
+            <p>Visible</p>
+            <details><summary>Hechos</summary><p>Primero</p></details>
+            <div role="tabpanel" hidden><p>Pestaña</p></div>
+            <nav style="display: none">Menú móvil</nav>`;
+        document.body.append(section);
+    });
+    await activate(page);
+    await page.locator('#plegables p').first().hover();
+    await page.keyboard.press('ArrowUp');
+    await page.keyboard.press('Enter');
+    await expect.poll(() => readClipboard(page)).toBe('Visible\n\nHechos');
+
+    await panel(page).getByRole('button', { name: 'Opciones' }).click();
+    await panel(page)
+        .getByRole('checkbox', { name: /Incluir contenido oculto/ })
+        .check();
+    await page.locator('#plegables p').first().hover();
+    await page.keyboard.press('ArrowUp');
+    await page.keyboard.press('Enter');
+    await expect.poll(() => readClipboard(page)).toBe('Visible\n\nHechos\n\nPrimero\n\nPestaña');
+});
+
 test('copies the current text selection directly', async ({ page, context }) => {
     await open(page, context);
     await page.evaluate(() => {
