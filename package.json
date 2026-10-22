@@ -25,7 +25,7 @@
         "check": "npm run lint && npm test && npm run test:e2e"
     },
     "dependencies": {
-        "turndown": "^7.2.4"
+        "turndown": "7.2.4"
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",
