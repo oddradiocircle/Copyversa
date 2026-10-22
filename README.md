@@ -86,7 +86,7 @@ En el panel, el botón de opciones muestra:
 
 - **Quitar enlaces:** deja solo el texto de los enlaces.
 - **Incluir imágenes:** conserva o descarta las imágenes.
-- **Incluir contenido oculto:** copia también los acordeones y las pestañas cerradas del bloque. Viene apagada para no copiar menús ocultos.
+- **Incluir contenido oculto:** copia también los acordeones y las pestañas cerradas del bloque. Solo incluye las secciones que la página marca como plegables; los menús, duplicados y avisos ocultos quedan fuera. Viene apagada.
 - **Añadir fuente y fecha de consulta:** agrega, por ejemplo, `Fuente: Ley 1564 de 2012. https://… Consultado el 21 de octubre de 2026.`
 - **Salir después de copiar:** cierra CopyVersa después de cada copia.
 - **Atajo:** en el userscript puedes cambiarlo. En la extensión se cambia en `chrome://extensions/shortcuts`.
