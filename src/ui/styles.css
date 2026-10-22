@@ -1,0 +1,358 @@
+:host {
+    --bg: #ffffff;
+    --fg: #1a1a1a;
+    --muted: #595959;
+    --line: #e5e5e5;
+    --soft: #f0ebe5;
+    --accent: #f97316;
+    --accent-strong: #c2410c;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.16);
+    color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+    :host {
+        --bg: #1f1f1f;
+        --fg: #f5f5f5;
+        --muted: #b8b8b8;
+        --line: #3a3a3a;
+        --soft: #2d2824;
+        --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        color-scheme: dark;
+    }
+}
+
+* {
+    box-sizing: border-box;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+.panel,
+.toast,
+.label,
+.badge {
+    font:
+        13px/1.4 system-ui,
+        -apple-system,
+        'Segoe UI',
+        Roboto,
+        sans-serif;
+    letter-spacing: normal;
+    text-transform: none;
+}
+
+.highlight,
+.mark {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    border-radius: 2px;
+}
+
+.highlight {
+    outline: 2px solid var(--accent);
+    outline-offset: -1px;
+    background: rgba(249, 115, 22, 0.08);
+}
+
+.label {
+    position: absolute;
+    left: -1px;
+    bottom: 100%;
+    padding: 3px 7px;
+    border-radius: 4px 4px 0 0;
+    background: var(--accent);
+    color: #1a1a1a;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.highlight.inside .label {
+    top: 0;
+    bottom: auto;
+    border-radius: 0 0 4px 0;
+}
+
+.mark {
+    outline: 2px dashed var(--accent-strong);
+    outline-offset: -1px;
+    background: rgba(249, 115, 22, 0.12);
+}
+
+.badge {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: 11px;
+    background: var(--accent);
+    color: #1a1a1a;
+    font-weight: 700;
+    line-height: 22px;
+    text-align: center;
+}
+
+.panel {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    width: 300px;
+    max-width: calc(100vw - 32px);
+    padding: 0 14px 12px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--bg);
+    color: var(--fg);
+    box-shadow: var(--shadow);
+    pointer-events: auto;
+}
+
+.bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 -14px 12px;
+    padding: 8px 8px 8px 14px;
+    border-bottom: 1px solid var(--line);
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+}
+
+.bar:active {
+    cursor: grabbing;
+}
+
+.bar strong {
+    flex: 1;
+    font-size: 14px;
+}
+
+.logo {
+    width: 20px;
+    height: 20px;
+    flex: none;
+}
+
+button {
+    font: inherit;
+    color: inherit;
+}
+
+.icon-button {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: 0;
+    border-radius: 8px;
+    background: none;
+    color: var(--muted);
+    cursor: pointer;
+}
+
+.icon-button:hover,
+.icon-button[aria-expanded='true'] {
+    background: var(--soft);
+    color: var(--fg);
+}
+
+.icon-button svg {
+    width: 16px;
+    height: 16px;
+}
+
+button:focus-visible,
+input:focus-visible + span,
+.check input:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+legend,
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.formats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+}
+
+.format {
+    position: relative;
+}
+
+.format input {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.format span {
+    display: block;
+    padding: 7px 8px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.format:hover span {
+    border-color: var(--muted);
+}
+
+.format input:checked + span {
+    border-color: var(--fg);
+    background: var(--fg);
+    color: var(--bg);
+}
+
+.help {
+    min-height: 3.6em;
+    margin: 8px 0 6px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-height: 34px;
+}
+
+.check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    cursor: pointer;
+}
+
+.check input {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: var(--accent-strong);
+}
+
+.primary {
+    padding: 6px 12px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #1a1a1a;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.primary:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+.secondary {
+    padding: 3px 10px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: none;
+    cursor: pointer;
+}
+
+.secondary:hover {
+    background: var(--soft);
+}
+
+.hint {
+    margin: 6px 0 0;
+    color: var(--muted);
+    font-size: 11.5px;
+}
+
+.options {
+    margin-top: 10px;
+    padding-top: 6px;
+    border-top: 1px solid var(--line);
+}
+
+.shortcut {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.shortcut small {
+    flex-basis: 100%;
+    color: var(--muted);
+    font-size: 11.5px;
+}
+
+kbd {
+    padding: 1px 5px;
+    border: 1px solid var(--line);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    background: var(--soft);
+    font:
+        600 11.5px/1.4 ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        Consolas,
+        monospace;
+}
+
+.toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    max-width: calc(100vw - 32px);
+    padding: 10px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    background: #1a1a1a;
+    color: #ffffff;
+    box-shadow: var(--shadow);
+    opacity: 0;
+    transform: translate(-50%, 12px);
+    transition:
+        opacity 160ms,
+        transform 160ms;
+    pointer-events: none;
+}
+
+.toast.visible {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .toast {
+        transition: none;
+    }
+}
